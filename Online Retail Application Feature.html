@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Online Retail App</title>
+  <style>
+    body {
+      font-family: sans-serif;
+      max-width: 800px;
+      margin: 0 auto;
+      background-color:blueviolet   ;
+    }
+
+    ul {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+    }
+
+    li {
+      padding: 5px;
+      border-bottom: 1px solid #ddd;
+    }
+
+    li:nth-child(even) {
+      background-color: #f2f2f2;
+    }
+    li:nth-child(odd) {
+      background-color: #f2f2f2;
+    }
+    button {
+      background-color: #4CAF50;
+      color: white;
+      padding: 5px 10px;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+
+    button:hover {
+      background-color: #072009;
+    }
+  </style>
+</head>
+<body>
+  <h1>Online Retail App</h1>
+  <main>
+    <section id="products">
+      <h2>Products</h2>
+      <ul id="product-list">
+        <li>
+          <span>Product 1</span>
+          <span>100 Rs</span>
+          <button data-id="1" onclick="addToCart(this)">Add to cart</button>
+        </li>
+        <li>
+          <span>Product 2</span>
+          <span>200 Rs</span>
+          <button data-id="2" onclick="addToCart(this)">Add to cart</button>
+        </li>
+        <li>
+          <span>Product 3</span>
+          <span>300 Rs</span>
+          <button data-id="3" onclick="addToCart(this)">Add to cart</button>
+        </li>
+      </ul>
+    </section>
+    <section id="cart">
+      <h2>Cart</h2>
+      <ul id="cart-list"></ul>
+      <p>Total price: Rs<span id="total-price">0.00</span></p>
+    </section>  
+  </main>
+
+  <script>
+    let cart = [];
+
+    function addToCart(button) {
+      const productId = button.getAttribute('data-id');
+      const productName = button.parentNode.querySelector('span:first-child').textContent;
+      const productPrice = parseFloat(button.parentNode.querySelector('span:nth-child(2)').textContent.replace('$', ''));
+      const product = { id: productId, name: productName, price: productPrice };
+      cart.push(product);
+      updateCart();
+    }
+
+    function updateCart() {
+      const cartList = document.getElementById('cart-list');
+      cartList.innerHTML = '';
+      cart.forEach((product) => {
+        const cartItem = document.createElement('li');
+        cartItem.textContent = `${product.name} - $${product.price.toFixed(2)}`;
+        const removeButton = document.createElement('button');
+        removeButton.textContent = 'Remove';
+        removeButton.onclick = () => {
+          const index = cart.indexOf(product);
+          if (index !== -1) {
+            cart.splice(index, 1);
+            updateCart();
+          }
+        };
+        cartItem.appendChild(removeButton);
+        cartList.appendChild(cartItem);
+      });
+      const totalPrice = cart.reduce((acc, product) => acc + product.price, 0);
+      document.getElementById('total-price').textContent = totalPrice.toFixed(2);
+    }
+  </script>
+</body>
+</html>
